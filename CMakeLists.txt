@@ -142,6 +142,14 @@ add_custom_target(uninstall
 )
 
 ########################################################################
+# Find SoapySDR
+########################################################################
+find_package(SoapySDR)
+if (NOT SOAPY_SDR_FOUND)
+    message(FATAL_ERROR "need SoapySDR libraries to continue")
+endif()
+
+########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/sdr)
