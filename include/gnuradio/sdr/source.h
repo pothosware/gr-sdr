@@ -24,6 +24,7 @@
 #define INCLUDED_GR_SDR_SOURCE_H
 
 #include <gnuradio/sdr/api.h>
+#include <gnuradio/sdr/types.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -44,8 +45,8 @@ namespace gr {
        * \param stream_args the IO format and channel specification
        * \return a new SDR device source block object
        */
-      static sptr make(const std::map<std::string, std::string> &device_addr,
-                       const std::map<std::string, std::string> &stream_args);
+      static sptr make(const gr::sdr::kwargs_t &device_addr,
+                       const gr::sdr::kwargs_t &stream_args);
 
       /*!
        * Set the frontend specification.
@@ -76,7 +77,7 @@ namespace gr {
        * Get the possible sample rates for the SDR device.
        * \return a range of rates in Sps
        */
-      virtual std::vector<std::pair<double, double> > get_samp_rates(void) = 0;
+      virtual std::vector<double> get_samp_rates(void) = 0;
 
       /*!
        * Tune the SDR device to the desired center frequency.
@@ -100,7 +101,7 @@ namespace gr {
        * \param chan the channel index 0 to N-1
        * \return the frequency range in Hz
        */
-      virtual std::vector<std::pair<double, double> > get_freq_range(size_t chan = 0) = 0;
+      virtual std::vector<gr::sdr::range_t> get_freq_range(size_t chan = 0) = 0;
 
       /*!
        * Set the gain for the dboard.
@@ -146,7 +147,7 @@ namespace gr {
        * \param chan the channel index 0 to N-1
        * \return the gain range in dB
        */
-      virtual std::vector<std::pair<double, double> > get_gain_range(size_t chan = 0) = 0;
+      virtual gr::sdr::range_t get_gain_range(size_t chan = 0) = 0;
 
       /*!
        * Get the settable gain range.
@@ -154,7 +155,7 @@ namespace gr {
        * \param chan the channel index 0 to N-1
        * \return the gain range in dB
        */
-      virtual std::vector<std::pair<double, double> > get_gain_range(const std::string &name, size_t chan = 0) = 0;
+      virtual gr::sdr::range_t get_gain_range(const std::string &name, size_t chan = 0) = 0;
 
       /*!
        * Set the antenna to use.
@@ -196,7 +197,7 @@ namespace gr {
        * \param chan the channel index 0 to N-1
        * \return the range of the filter bandwidth in Hz
        */
-      virtual std::vector<std::pair<double, double> > get_bandwidth_range(size_t chan = 0) = 0;
+      virtual std::vector<double> get_bandwidth_range(size_t chan = 0) = 0;
 
       /*!
        * Set a constant DC offset value.

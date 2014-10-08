@@ -19,13 +19,43 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_SDR_API_H
-#define INCLUDED_GR_SDR_API_H
+#ifndef INCLUDED_GR_SDR_TYPES_H
+#define INCLUDED_GR_SDR_TYPES_H
 
-#ifdef gnuradio_sdr_EXPORTS
-#  define GR_SDR_API SDR_EXPORT
-#else
-#  define GR_SDR_API SDR_IMPORT
-#endif
+#include <gnuradio/sdr/api.h>
+#include <map>
+#include <string>
+#include <vector>
 
-#endif /* INCLUDED_GR_SDR_API_H */
+namespace gr {
+  namespace sdr {
+
+    //! Typedef for a dictionary of key-value string arguments
+    typedef std::map<std::string, std::string> kwargs_t;
+
+    /*!
+     * A simple min/max numeric range pair
+     */
+    class GR_SDR_API range_t
+    {
+    public:
+
+        //! Create an empty range (0.0, 0.0)
+        range_t(void);
+
+        //! Create a min/max range
+        range_t(const double minimum, const double maximum);
+
+        //! Get the range minimum
+        double minimum(void) const;
+
+        //! Get the range maximum
+        double maximum(void) const;
+
+    private:
+        double _min, _max;
+    };
+
+}}
+
+#endif /* INCLUDED_GR_SDR_TYPES_H */
