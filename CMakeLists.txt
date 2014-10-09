@@ -149,11 +149,13 @@ if (NOT SOAPY_SDR_FOUND)
     message(FATAL_ERROR "need SoapySDR libraries to continue")
 endif()
 
+include_directories(${SOAPY_SDR_INCLUDE_DIRS})
+
 ########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/sdr)
-#add_subdirectory(lib)
+add_subdirectory(lib)
 #add_subdirectory(swig)
 #add_subdirectory(python)
 #add_subdirectory(grc)

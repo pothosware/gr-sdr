@@ -1,4 +1,3 @@
-/* -*- c++ -*- */
 /*
  * Copyright 2010-2014 Free Software Foundation, Inc.
  *
@@ -49,14 +48,14 @@ namespace gr {
                        const gr::sdr::kwargs_t &stream_args);
 
       /*!
-       * Set the frontend specification.
+       * Set the frontend mapping.
        * \param spec the subdev spec markup string
        */
-      virtual void set_frontend_map(const std::string &spec) = 0;
+      virtual void set_frontend_map(const std::string &mapping) = 0;
 
       /*!
-       * Get the RX frontend specification.
-       * \return the frontend specification in use
+       * Get the RX frontend mapping.
+       * \return the frontend mapping in use
        */
       virtual std::string get_frontend_map() = 0;
 

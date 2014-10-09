@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,15 +19,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_SDR_API_H
-#define INCLUDED_GR_SDR_API_H
+#include <gnuradio/sdr/types.h>
 
-#include <gnuradio/attributes.h>
-
-#ifdef gnuradio_sdr_EXPORTS
-#  define GR_SDR_API __GR_ATTR_EXPORT
-#else
-#  define GR_SDR_API __GR_ATTR_IMPORT
-#endif
-
-#endif /* INCLUDED_GR_SDR_API_H */
+namespace gr {
+  namespace sdr {
+    range_t::range_t(void):
+        _min(0.0), _max(0.0)
+    {}
+    range_t::range_t(const double minimum, const double maximum):
+        _min(minimum), _max(maximum)
+    {}
+    double range_t::minimum(void) const
+    {
+        return _min;
+    }
+    double range_t::maximum(void) const
+    {
+        return _max;
+    }
+}}
