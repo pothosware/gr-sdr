@@ -21,9 +21,206 @@
 
 #include "sink_impl.h"
 #include "sdr_helpers.h"
+#include <boost/foreach.hpp>
 
-gr::sdr::sink::sptr gr::sdr::sink::make(const gr::sdr::kwargs_t &device_addr, const gr::sdr::kwargs_t &stream_args)
+gr::sdr::sink::sptr gr::sdr::sink::make(const gr::sdr::kwargs_t &device_addr, const std::string &format, const std::vector<size_t> &channels_, const gr::sdr::kwargs_t &stream_args)
 {
     check_abi("gr::sdr::sink::make");
+    std::vector<size_t> channels = channels_;
+    gr::io_signature::sptr sig = stream_args_to_io_signature(format, channels);
+    SoapySDR::Device *device = SoapySDR::Device::make(device_addr);
+    SoapySDR::Stream *stream = device->setupStream(SOAPY_SDR_TX, format, channels, stream_args);
+
+    return gr::sdr::sink::sptr(new gr_sdr_sink_impl(device, stream, channels, sig));
+}
+
+gr_sdr_sink_impl::gr_sdr_sink_impl(
+    SoapySDR::Device *device,
+    SoapySDR::Stream *stream,
+    const std::vector<size_t> &channels,
+    const gr::io_signature::sptr sig):
+    gr::sync_block("gr::sdr::sink", sig, gr::io_signature::make(0, 0, 0)),
+    d_device(device),
+    d_stream(stream),
+    d_channels(channels)
+{
+    return;
+}
+
+gr_sdr_sink_impl::~gr_sdr_sink_impl(void)
+{
+    d_device->closeStream(d_stream);
+    SoapySDR::Device::unmake(d_device);
+}
+
+void gr_sdr_sink_impl::set_frontend_map(const std::string &mapping)
+{
+    return d_device->setFrontendMapping(SOAPY_SDR_TX, mapping);
+}
+
+std::string gr_sdr_sink_impl::get_frontend_map()
+{
+    return d_device->getFrontendMapping(SOAPY_SDR_TX);
+}
+
+void gr_sdr_sink_impl::set_samp_rate(double rate)
+{
+    BOOST_FOREACH(const size_t chan, d_channels)
+    {
+        d_device->setSampleRate(SOAPY_SDR_TX, chan, rate);
+    }
+}
+
+double gr_sdr_sink_impl::get_samp_rate(void)
+{
+    return d_device->getSampleRate(SOAPY_SDR_TX, d_channels.front());
+}
+
+std::vector<double> gr_sdr_sink_impl::get_samp_rates(void)
+{
+    return d_device->listSampleRates(SOAPY_SDR_TX, d_channels.front());
+}
+
+void gr_sdr_sink_impl::set_center_freq(double freq, size_t chan)
+{
+    return d_device->setFrequency(SOAPY_SDR_TX, d_channels.at(chan), freq);
+}
+
+double gr_sdr_sink_impl::get_center_freq(size_t chan)
+{
+    return d_device->getFrequency(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+std::vector<gr::sdr::range_t> gr_sdr_sink_impl::get_freq_range(size_t chan)
+{
+    return toRanges(d_device->getFrequencyRange(SOAPY_SDR_TX, d_channels.at(chan)));
+}
+
+void gr_sdr_sink_impl::set_gain(double gain, size_t chan)
+{
+    return d_device->setGain(SOAPY_SDR_TX, d_channels.at(chan), gain);
+}
+
+void gr_sdr_sink_impl::set_gain(double gain, const std::string &name, size_t chan)
+{
+    return d_device->setGain(SOAPY_SDR_TX, d_channels.at(chan), name, gain);
+}
+
+double gr_sdr_sink_impl::get_gain(size_t chan)
+{
+    return d_device->getGain(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+double gr_sdr_sink_impl::get_gain(const std::string &name, size_t chan)
+{
+    return d_device->getGain(SOAPY_SDR_TX, d_channels.at(chan), name);
+}
+
+std::vector<std::string> gr_sdr_sink_impl::get_gain_names(size_t chan)
+{
+    return d_device->listGains(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+gr::sdr::range_t gr_sdr_sink_impl::get_gain_range(size_t chan)
+{
+    return toRange(d_device->getGainRange(SOAPY_SDR_TX, d_channels.at(chan)));
+}
+
+gr::sdr::range_t gr_sdr_sink_impl::get_gain_range(const std::string &name, size_t chan)
+{
+    return toRange(d_device->getGainRange(SOAPY_SDR_TX, d_channels.at(chan), name));
+}
+
+void gr_sdr_sink_impl::set_antenna(const std::string &ant, size_t chan)
+{
+    return d_device->setAntenna(SOAPY_SDR_TX, d_channels.at(chan), ant);
+}
+
+std::string gr_sdr_sink_impl::get_antenna(size_t chan)
+{
+    return d_device->getAntenna(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+std::vector<std::string> gr_sdr_sink_impl::get_antennas(size_t chan)
+{
+    return d_device->listAntennas(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+void gr_sdr_sink_impl::set_bandwidth(double bandwidth, size_t chan)
+{
+    return d_device->setBandwidth(SOAPY_SDR_TX, d_channels.at(chan), bandwidth);
+}
+
+double gr_sdr_sink_impl::get_bandwidth(size_t chan)
+{
+    return d_device->getBandwidth(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+std::vector<double> gr_sdr_sink_impl::get_bandwidth_range(size_t chan)
+{
+    return d_device->listBandwidths(SOAPY_SDR_TX, d_channels.at(chan));
+}
+
+void gr_sdr_sink_impl::set_dc_offset(const std::complex<double> &offset, size_t chan)
+{
+    return d_device->setDCOffset(SOAPY_SDR_TX, d_channels.at(chan), offset);
+}
+
+void gr_sdr_sink_impl::set_iq_balance(const std::complex<double> &correction, size_t chan)
+{
+    return d_device->setIQBalance(SOAPY_SDR_TX, d_channels.at(chan), correction);
+}
+
+void gr_sdr_sink_impl::set_time_source(const std::string &source)
+{
+    return d_device->setTimeSource(source);
+}
+
+std::string gr_sdr_sink_impl::get_time_source()
+{
+    return d_device->getTimeSource();
+}
+
+std::vector<std::string> gr_sdr_sink_impl::get_time_sources()
+{
+    return d_device->listTimeSources();
+}
+
+void gr_sdr_sink_impl::set_clock_source(const std::string &source)
+{
+    return d_device->setClockSource(source);
+}
+
+std::string gr_sdr_sink_impl::get_clock_source()
+{
+    return d_device->getClockSource();
+}
+
+std::vector<std::string> gr_sdr_sink_impl::get_clock_sources()
+{
+    return d_device->listClockSources();
+}
+
+double gr_sdr_sink_impl::get_clock_rate()
+{
+    return d_device->getMasterClockRate();
+}
+
+void gr_sdr_sink_impl::set_clock_rate(double rate)
+{
+    return d_device->setMasterClockRate(rate);
+}
+
+int gr_sdr_sink_impl::work(int noutput_items,
+           gr_vector_const_void_star &input_items,
+           gr_vector_void_star &)
+{
+
+    //TODO use tags to set flags and time
+
+    int flags = 0;
+    const long long timeNs = 0;
+    const long timeoutUs = 10000; //10ms
+    return d_device->writeStream(d_stream, &input_items[0], noutput_items, flags, timeNs, timeoutUs);
 }
 

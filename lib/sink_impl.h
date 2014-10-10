@@ -28,7 +28,11 @@
 class gr_sdr_sink_impl : public gr::sdr::sink
 {
 public:
-    gr_sdr_sink_impl(SoapySDR::Device *device, SoapySDR::Stream *_stream);
+    gr_sdr_sink_impl(
+        SoapySDR::Device *device,
+        SoapySDR::Stream *stream,
+        const std::vector<size_t> &channels,
+        const gr::io_signature::sptr sig);
     ~gr_sdr_sink_impl(void);
     void set_frontend_map(const std::string &mapping);
     std::string get_frontend_map();
@@ -61,10 +65,14 @@ public:
     std::vector<std::string> get_clock_sources();
     double get_clock_rate();
     void set_clock_rate(double rate);
+    int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
 
 private:
-    SoapySDR::Device *_device;
-    SoapySDR::Stream *_stream;
+    SoapySDR::Device *d_device;
+    SoapySDR::Stream *d_stream;
+    const std::vector<size_t> d_channels;
 };
 
 #endif /* INCLUDED_GR_SDR_SINK_IMPL_H */
