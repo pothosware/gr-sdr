@@ -40,20 +40,20 @@ namespace gr {
        * The SDR device sink block reads a stream and transmits the samples.
        * The sink block also provides API calls for transmitter settings.
        *
-       * \param device_addr the address to identify the hardware
+       * \param addr the address args to identify the hardware
        * \param format the host sample format markup string
        * \param channels a list of channels on the device to use
-       * \param stream_args the IO format and channel specification
+       * \param args optional special key/value arguments
        * \return a new SDR device sink block object
        */
-      static sptr make(const gr::sdr::kwargs_t &device_addr = gr::sdr::kwargs_t(),
+      static sptr make(const gr::sdr::kwargs_t &addr = gr::sdr::kwargs_t(),
                        const std::string &format = "CF32",
                        const std::vector<size_t> &channels = std::vector<size_t>(),
-                       const gr::sdr::kwargs_t &stream_args = gr::sdr::kwargs_t());
+                       const gr::sdr::kwargs_t &args = gr::sdr::kwargs_t());
 
       /*!
        * Set the frontend mapping.
-       * \param spec the mapping markup string
+       * \param mapping the mapping markup string
        */
       virtual void set_frontend_map(const std::string &mapping) = 0;
 

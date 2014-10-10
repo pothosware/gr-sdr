@@ -23,13 +23,13 @@
 #include "sdr_helpers.h"
 #include <boost/foreach.hpp>
 
-gr::sdr::source::sptr gr::sdr::source::make(const gr::sdr::kwargs_t &device_addr, const std::string &format, const std::vector<size_t> &channels_, const gr::sdr::kwargs_t &stream_args)
+gr::sdr::source::sptr gr::sdr::source::make(const gr::sdr::kwargs_t &addr, const std::string &format, const std::vector<size_t> &channels_, const gr::sdr::kwargs_t &args)
 {
     check_abi("gr::sdr::source::make");
     std::vector<size_t> channels = channels_;
     gr::io_signature::sptr sig = stream_args_to_io_signature(format, channels);
-    SoapySDR::Device *device = SoapySDR::Device::make(device_addr);
-    SoapySDR::Stream *stream = device->setupStream(SOAPY_SDR_RX, format, channels, stream_args);
+    SoapySDR::Device *device = SoapySDR::Device::make(addr);
+    SoapySDR::Stream *stream = device->setupStream(SOAPY_SDR_RX, format, channels, args);
 
     return gr::sdr::source::sptr(new gr_sdr_source_impl(device, stream, channels, sig));
 }

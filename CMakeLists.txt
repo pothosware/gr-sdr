@@ -17,7 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-
 ########################################################################
 # Project setup
 ########################################################################
@@ -40,6 +39,16 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     #http://gcc.gnu.org/wiki/Visibility
     add_definitions(-fvisibility=hidden)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+    #force a compile-time error when symbols are missing
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined")
+
+    #common warnings to help encourage good coding practices
+    add_compile_options(-Wall)
+    add_compile_options(-Wextra)
 endif()
 
 ########################################################################
@@ -152,29 +161,12 @@ endif()
 include_directories(${SOAPY_SDR_INCLUDE_DIRS})
 
 ########################################################################
-# Helpful compiler flags
-########################################################################
-if(CMAKE_COMPILER_IS_GNUCXX)
-    #force a compile-time error when symbols are missing
-    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
-    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined")
-
-    #common warnings to help encourage good coding practices
-    add_compile_options(-Wall)
-    add_compile_options(-Wextra)
-
-    #symbols are only exported from libraries/modules explicitly
-    add_compile_options(-fvisibility=hidden)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
-endif()
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/sdr)
 add_subdirectory(lib)
-#add_subdirectory(swig)
-#add_subdirectory(python)
+add_subdirectory(swig)
+add_subdirectory(python/sdr)
 #add_subdirectory(grc)
 #add_subdirectory(apps)
 add_subdirectory(docs)
