@@ -211,6 +211,16 @@ void gr_sdr_sink_impl::set_clock_rate(double rate)
     return d_device->setMasterClockRate(rate);
 }
 
+bool gr_sdr_sink_impl::start(void)
+{
+    return d_device->activateStream(d_stream) == 0;
+}
+
+bool gr_sdr_sink_impl::stop(void)
+{
+    return d_device->deactivateStream(d_stream) == 0;
+}
+
 int gr_sdr_sink_impl::work(int noutput_items,
            gr_vector_const_void_star &input_items,
            gr_vector_void_star &)
