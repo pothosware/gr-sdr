@@ -67,7 +67,20 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
 	<param>
-		<name>$(direction.title())put Type</name>
+		<name>Device Address</name>
+		<key>dev_addr</key>
+		<value>{}</value>
+		<type>raw</type>
+		<hide>
+			\#if \$dev_addr()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+	</param>
+	<param>
+		<name>$(direction.title())put Format</name>
 		<key>type</key>
 		<type>enum</type>
 		<option>
@@ -80,19 +93,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			<key>CS16</key>
 			<opt>type:sc16</opt>
 		</option>
-	</param>
-	<param>
-		<name>Stream args</name>
-		<key>stream_args</key>
-		<value>{}</value>
-		<type>raw</type>
-		<hide>
-			\#if \$stream_args()
-				none
-			\#else
-				part
-			\#end if
-		</hide>
 	</param>
 	<param>
 		<name>Stream channels</name>
@@ -108,12 +108,12 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		</hide>
 	</param>
 	<param>
-		<name>Address</name>
-		<key>dev_addr</key>
+		<name>Stream args</name>
+		<key>stream_args</key>
 		<value>{}</value>
 		<type>raw</type>
 		<hide>
-			\#if \$dev_addr()
+			\#if \$stream_args()
 				none
 			\#else
 				part
@@ -198,6 +198,18 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<nports>\$nchan</nports>
 	</$sourk>
 	<doc>
+Device Address: key/value string pairs that identify a device.
+Example specifying the RTL SDR driver: {'driver' : 'rtl'}.
+
+Stream channels: a list of available stream channels \
+that acts as a map from a port index on the block \
+to a physical streaming channel on the device.
+
+Stream args: optional key/value stream pairs to augment the stream.
+Example specifying the wire format on some devices: {'WIRE' : 'sc8'}.
+
+Frontend map: an optional markup string to specify the mapping \
+of channels to available RF frontends. The markup is vendor specific.
 	</doc>
 </block>
 """
