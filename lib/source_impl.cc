@@ -39,7 +39,7 @@ gr_sdr_source_impl::gr_sdr_source_impl(
     SoapySDR::Stream *stream,
     const std::vector<size_t> &channels,
     const gr::io_signature::sptr sig):
-    gr::sync_block("gr::sdr::source", sig, gr::io_signature::make(0, 0, 0)),
+    gr::sync_block("gr::sdr::source", gr::io_signature::make(0, 0, 0), sig),
     d_device(device),
     d_stream(stream),
     d_channels(channels)

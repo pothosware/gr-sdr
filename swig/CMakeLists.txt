@@ -44,7 +44,7 @@ GR_SWIG_MAKE(sdr_swig sdr_swig.i)
 ########################################################################
 # Install the build swig module
 ########################################################################
-GR_SWIG_INSTALL(TARGETS sdr_swig DESTINATION ${GR_PYTHON_DIR}/sdr)
+GR_SWIG_INSTALL(TARGETS sdr_swig DESTINATION ${GR_PYTHON_DIR}/gnuradio/sdr)
 
 ########################################################################
 # Install swig .i files for development
