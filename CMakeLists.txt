@@ -153,12 +153,10 @@ add_custom_target(uninstall
 ########################################################################
 # Find SoapySDR
 ########################################################################
-find_package(SoapySDR)
-if (NOT SOAPY_SDR_FOUND)
+find_package(SoapySDR NO_MODULE)
+if (NOT SoapySDR_FOUND)
     message(FATAL_ERROR "need SoapySDR libraries to continue")
 endif()
-
-include_directories(${SOAPY_SDR_INCLUDE_DIRS})
 
 ########################################################################
 # Add subdirectories
