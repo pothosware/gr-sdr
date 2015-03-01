@@ -47,8 +47,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined")
 
     #common warnings to help encourage good coding practices
-    add_compile_options(-Wall)
-    add_compile_options(-Wextra)
+    add_definitions(-Wall)
+    add_definitions(-Wextra)
 endif()
 
 ########################################################################
