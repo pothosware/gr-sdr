@@ -173,7 +173,7 @@ add_subdirectory(docs)
 # Install cmake search helper for this library
 ########################################################################
 install(FILES cmake/Modules/sdrConfig.cmake
-    DESTINATION lib/cmake/sdr
+    DESTINATION lib${LIB_SUFFIX}/cmake/sdr
 )
 
 ########################################################################
